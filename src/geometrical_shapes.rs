@@ -577,10 +577,11 @@ impl Drawable for Cube {
         ];
 
         for (start_idx, end_idx) in lines {
-            let start = &points[start_idx];
-            let end = &points[end_idx];
+            let start = &points[start_idx % points.len()]; // Utilisation de l'opérateur modulo pour s'assurer que l'index reste dans les limites
+            let end = &points[end_idx % points.len()]; // Utilisation de l'opérateur modulo pour s'assurer que l'index reste dans les limites
             let line = Line::new(start, end);
             line.draw(img);
         }
+        
     }
 }
