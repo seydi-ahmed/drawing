@@ -507,3 +507,42 @@ impl Displayable for Image {
         }
     }
 }
+
+// *************************************************************************
+
+pub struct Pentagon {
+    center: Point,
+    radius: i32,
+}
+
+impl Pentagon {
+    pub fn new(center: Point, radius: i32) -> Self {
+        Pentagon { center, radius }
+    }
+}
+
+impl Drawable for Pentagon {
+    fn draw(&self, img: &mut Image) {
+        // Calcul des coordonnées des sommets du pentagone
+        let mut points = Vec::new();
+        let angle_degrees:f32 = 360.0 / 5.0;
+        let angle_radians = angle_degrees.to_radians();
+        let mut current_angle: f32 = 0.0;
+
+        for _ in 0..5 {
+            let x: f32 = self.center.x as f32 + (self.radius as f32 * current_angle.cos());
+            let y = self.center.y as f32 + (self.radius as f32 * current_angle.sin());
+            points.push(Point::new(x as i32, y as i32));
+            current_angle += angle_radians;
+        }
+
+        // Dessin des lignes reliant les sommets du pentagone
+        for i in 0..5 {
+            let start = &points[i];
+            let end = if i == 4 { &points[0] } else { &points[i + 1] };
+            let line = Line::new(&start, &end);
+            line.draw(img);
+        }
+    }
+}
+
