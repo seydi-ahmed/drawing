@@ -426,36 +426,34 @@ impl Drawable for Triangle{
 }
 
 
-
-
 // *************************************************************************
 
 
-pub struct Rectangle{
+pub struct Rectangle {
     ref_1: Point,
-    ref_2: Point
+    ref_2: Point,
 }
-impl Rectangle{
-    pub fn new(a: &Point, b: &Point) -> Self{
-        Self{
-            ref_1: Point::new(a.x, b.y),
-            ref_2: Point::new(b.x, b.y)
+
+impl Rectangle {
+    pub fn new(ref_1: &Point, ref_2: &Point) -> Self {
+        Self {
+            ref_1: Point::new(ref_1.x, ref_1.y),
+            ref_2: Point::new(ref_2.x, ref_2.y),
         }
     }
-        // Fonction interne pour dessiner une ligne entre deux points
-        pub fn draw_line(&self, start: &Point, end: &Point, img: &mut Image) {
-            // Créer une ligne à partir des deux points et la dessiner
-            let line = Line::new(start, end);
-            line.draw(img);
-        }
 }
+
 impl Drawable for Rectangle {
     fn draw(&self, img: &mut Image) {
-        // Dessiner les quatre côtés du rectangle en utilisant la méthode draw_line
-        self.draw_line(&self.ref_1, &Point::new(self.ref_1.x, self.ref_2.y), img);
-        self.draw_line(&Point::new(self.ref_1.x, self.ref_2.y), &self.ref_2, img);
-        self.draw_line(&self.ref_2, &Point::new(self.ref_2.x, self.ref_1.y), img);
-        self.draw_line(&Point::new(self.ref_2.x, self.ref_1.y), &self.ref_1, img);
+        let line1 = Line::new(&self.ref_1, &Point::new(self.ref_1.x, self.ref_2.y));
+        let line2 = Line::new(&Point::new(self.ref_1.x, self.ref_2.y), &self.ref_2);
+        let line3 = Line::new(&self.ref_2, &Point::new(self.ref_2.x, self.ref_1.y));
+        let line4 = Line::new(&Point::new(self.ref_2.x, self.ref_1.y), &self.ref_1);
+        
+        line1.draw(img);
+        line2.draw(img);
+        line3.draw(img);
+        line4.draw(img);
     }
 }
 
@@ -468,12 +466,6 @@ pub struct Circle{
     radius: i32
 }
 impl Circle{
-    // pub fn new(c: Point, rad: i32) -> Self{
-    //     Self{
-    //         center: c,
-    //         radius: rad
-    //     }
-    // }
     pub fn random(max_x: i32, max_y: i32) -> Self {
         let center = Point::random(max_x as i32, max_y as i32);
         let radius = rand::thread_rng().gen_range(1, 101); 
