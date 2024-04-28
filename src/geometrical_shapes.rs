@@ -546,3 +546,41 @@ impl Drawable for Pentagon {
     }
 }
 
+// **************************************************************************************
+
+pub struct Cube {
+    center: Point,
+    size: i32,
+}
+
+impl Cube {
+    pub fn new(center: Point, size: i32) -> Self {
+        Cube { center, size }
+    }
+}
+
+impl Drawable for Cube {
+    fn draw(&self, img: &mut Image) {
+        // Calcul des coordonnées des sommets du cube
+        let half_size = self.size / 2;
+        let mut points = Vec::new();
+        points.push(Point::new(self.center.x - half_size, self.center.y - half_size));
+        points.push(Point::new(self.center.x + half_size, self.center.y - half_size));
+        points.push(Point::new(self.center.x + half_size, self.center.y + half_size));
+        points.push(Point::new(self.center.x - half_size, self.center.y + half_size));
+
+        // Dessin des lignes reliant les sommets du cube
+        let lines = vec![
+            (0, 1), (1, 2), (2, 3), (3, 0), // Base du cube
+            (0, 4), (1, 5), (2, 6), (3, 7), // Arêtes verticales
+            (4, 5), (5, 6), (6, 7), (7, 4), // Sommets opposés
+        ];
+
+        for (start_idx, end_idx) in lines {
+            let start = &points[start_idx];
+            let end = &points[end_idx];
+            let line = Line::new(start, end);
+            line.draw(img);
+        }
+    }
+}
